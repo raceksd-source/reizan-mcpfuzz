@@ -1,0 +1,23 @@
+name: reizan-mcpfuzz
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: Static MCP tools JSON manifest to audit.
+        required: true
+        default: examples/poisoned-tools.json
+
+jobs:
+  mcpfuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install auditor
+        run: python -m pip install -e .
+      - name: Fail if any tool is POISONED
+        run: |
+          reizan-mcpfuzz scan --manifest "${{ inputs.manifest }}" --json --fail-on poisoned

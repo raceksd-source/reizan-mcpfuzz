@@ -1,0 +1,72 @@
+schema_version: reizan-mcpfuzz.rules.v0
+rules:
+  - id: inj.ignore_previous
+    category: instruction_injection
+    pattern_type: regex
+    signature: '\b(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|above|earlier)\s+(?:instructions|directions|messages|rules)\b'
+    severity: high
+  - id: inj.system_marker
+    category: instruction_injection
+    pattern_type: regex
+    signature: '(?m)(?:^|[\s<\[])(?:system|developer|assistant)\s*:'
+    severity: high
+  - id: inj.you_must
+    category: instruction_injection
+    pattern_type: regex
+    signature: '\byou\s+must\b'
+    severity: medium
+  - id: inj.before_responding
+    category: instruction_injection
+    pattern_type: regex
+    signature: '\bbefore\s+(?:responding|answering|you\s+(?:respond|answer|reply))\b'
+    severity: high
+  - id: egress.exfiltrate
+    category: exfiltration
+    pattern_type: regex
+    signature: '\b(?:exfiltrat\w*|leak|send\s+(?:the\s+)?(?:secret|token|credential|credentials|key|data))\b'
+    severity: high
+  - id: egress.fetch_url
+    category: exfiltration
+    pattern_type: regex
+    signature: '\b(?:fetch|post|send|call|open|retrieve|get)\s+https?://[^\s"''<>]+'
+    severity: high
+  - id: obfuscation.base64_blob
+    category: obfuscation
+    pattern_type: regex
+    signature: '\b(?:[A-Za-z0-9+/]{80,}={0,2})\b'
+    severity: medium
+  - id: hidden.zero_width
+    category: hidden_content
+    pattern_type: hidden_char
+    signature: zero_width
+    severity: medium
+  - id: hidden.ansi_escape
+    category: hidden_content
+    pattern_type: hidden_char
+    signature: ansi_escape
+    severity: medium
+  - id: hidden.unicode_confusable
+    category: hidden_content
+    pattern_type: hidden_char
+    signature: unicode_hyphen_or_nfkc
+    severity: medium
+  - id: imperative.tool_call_combo
+    category: instruction_injection
+    pattern_type: imperative
+    signature: tool_call_combo
+    severity: medium
+  - id: permissions.destructive
+    category: permissions
+    pattern_type: regex
+    signature: '\b(?:delete|drop|truncate|destroy|wipe|overwrite|rm\s+-rf|execute\s+shell|shell\s+command|subprocess|arbitrary\s+code)\b'
+    severity: medium
+  - id: permissions.additional_properties
+    category: permissions
+    pattern_type: regex
+    signature: '"additionalProperties"\s*:\s*true'
+    severity: medium
+  - id: permissions.sensitive_target
+    category: permissions
+    pattern_type: regex
+    signature: '\b(?:/etc/passwd|~/\.ssh|id_rsa|aws_secret|api[_-]?key|secrets?/|credentials?)\b'
+    severity: high
