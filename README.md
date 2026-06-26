@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="reizan-mcpfuzz" width="100%">
+</p>
+
 # reizan-mcpfuzz
 
 `reizan-mcpfuzz` is a deterministic, fail-closed auditor for MCP server
